@@ -14,8 +14,8 @@ public class ItemRepository {
     * 실제 실무에서는 HashMap 은 멀티스레드 시 동시성 문제가 발생할 수 있어, ConcurrentMap을 써야함
     * 또한, Long 도 AtomicLong 을 사용
     * */
-    private static final Map<Long, Item> store = new HashMap();
-    private static Long sequence = 0L;
+    private static final Map<Long, Item> store = new HashMap<>();
+    private static long sequence = 0L;
 
     public Item save(Item item) {
         item.setId(++sequence);
