@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -65,10 +66,19 @@ public class BasicItemController {
         return "basic/addForm";
     }
 
+    /**
+     * redirectAttribute
+     * - {itemId} : addAttribute 한 이름으로 savedItem.getId() 치환
+     * - status : parameter 형식으로 붙고, true 면 save 처리 후에 전달하는 개념
+     *   ex) /basic/items/1?status=true
+     *   -> 리다이렉트 된 페이지에 ${param.status} 로 반환 가능
+     * */
     @PostMapping("/add")
-    public String save(@ModelAttribute("item") Item item) {
-        itemRepository.save(item);
-        return "redirect:/basic/items/" + item.getId();
+    public String save(Item item, RedirectAttributes redirectAttributes) {
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/basic/items/{itemId}";
     }
 
     @GetMapping("/{itemId}/edit")
@@ -76,15 +86,14 @@ public class BasicItemController {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
 
-        return "redirect:/basic/items/{itemId}";
+        return "basic/editForm";
     }
 
     @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable long itemId, @ModelAttribute("item") Item item) {
+    public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
         itemRepository.update(itemId, item);
-        return "basic/item";
+        return "redirect:/basic/items/{itemId}";
     }
-
 
     /**
      * 테스트용 데이터
