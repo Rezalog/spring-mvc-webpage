@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--
+
+thymeleaf : JSP 와 다르게 Natural Template 으로, 동적 매핑(th:xx) 이 이루어지지 않을 땐 html 태그를 사용한다.
+
+th:xxx : 서버사이드에서 렌더링됨, 기본적으로 동적 매핑이 없을땐 html 의 정적 프로퍼티를 작성, 동적 매핑이 적용될땐 th:xx 이하의 내용이 매핑됨.
+@{/xxx/xxx/} : /xxx/xxx/.. 의 경로 및 링크 형태를 삽입할 때 사용
+${item.id} : JSP 처럼 프로퍼티 형식으로 접근
+th:onclick=" | location.href='@{/basic/items/add}' | " : 리터럴 대체
+
+-->
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+            href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container" style="max-width: 600px">
+        <h2>상품 목록</h2>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary float-end"
+                    onclick="location.href='addForm.html"
+                    th:onclick="|location.href='@{/basic/items/add}'|"
+            >
+                상품 등록
+            </button>
+        </div>
+    </div>
+
+    <hr class="my-4">
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수량</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${items}">
+                <td><a href="item.html" th:href="@{/basic/items/{itemId}(itemId=${item.id})}" th:text="${item.id}">회원ID</a><td>
+                <td><a href="item.html" th:href="|/basic/items/${item.id}|" th:text="${item.itemName}">상품명</a><td>
+                <td th:text="${item.price}">10000<td>
+                <td th:text="${item.quantity}">10<td>
+            </tr>
+            </tbody>
+        </table>
+    </div> <!-- /container -->
+</body>
+</html>
